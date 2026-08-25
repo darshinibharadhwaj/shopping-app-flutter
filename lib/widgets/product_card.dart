@@ -1,8 +1,26 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/product.dart';
 import '../providers/cart_provider.dart';
 import '../screens/product_details_screen.dart';
+
+const List<Color> _placeholderColors = [
+  Color(0xFF4A5568),
+  Color(0xFF8B5A2B),
+  Color(0xFF2D3748),
+  Color(0xFFC9A876),
+  Color(0xFF6B8E6B),
+  Color(0xFFD97706),
+  Color(0xFF1A1A1A),
+  Color(0xFF94A3B8),
+  Color(0xFF3B5B92),
+  Color(0xFFB35A5A),
+];
+
+Color colorForProduct(String id) {
+  return _placeholderColors[id.hashCode.abs() % _placeholderColors.length];
+}
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -38,18 +56,14 @@ class ProductCard extends StatelessWidget {
           children: [
             AspectRatio(
               aspectRatio: 1,
-              child: Image.network(
-                product.imageUrl,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, progress) {
-                  if (progress == null) return child;
-                  return const Center(
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  );
-                },
-                errorBuilder: (context, error, stackTrace) => const Center(
-                  child: Icon(Icons.image_not_supported_outlined,
-                      color: Colors.grey),
+              child: Container(
+                color: colorForProduct(product.id),
+                child: const Center(
+                  child: Icon(
+                    Icons.shopping_bag_outlined,
+                    color: Colors.white70,
+                    size: 40,
+                  ),
                 ),
               ),
             ),
@@ -57,6 +71,7 @@ class ProductCard extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     product.name,
@@ -64,7 +79,7 @@ class ProductCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                      fontSize: 13,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -73,7 +88,7 @@ class ProductCard extends StatelessWidget {
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                      fontSize: 13,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -81,8 +96,10 @@ class ProductCard extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        padding: const EdgeInsets.symmetric(vertical: 6),
                         textStyle: const TextStyle(fontSize: 12),
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       onPressed: () {
                         context.read<CartProvider>().addToCart(product);
