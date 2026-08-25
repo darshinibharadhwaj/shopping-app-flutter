@@ -63,18 +63,23 @@ class ProductListScreen extends StatelessWidget {
           const SizedBox(width: 8),
         ],
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(12),
-        itemCount: dummyProducts.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          childAspectRatio: 0.62,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 900),
+          child: GridView.builder(
+            padding: const EdgeInsets.all(12),
+            itemCount: dummyProducts.length,
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 200,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: 0.62,
+            ),
+            itemBuilder: (context, index) {
+              return ProductCard(product: dummyProducts[index]);
+            },
+          ),
         ),
-        itemBuilder: (context, index) {
-          return ProductCard(product: dummyProducts[index]);
-        },
       ),
     );
   }
