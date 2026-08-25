@@ -18,15 +18,27 @@ class ProductDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AspectRatio(
-              aspectRatio: 1,
-              child: Container(
-                color: colorForProduct(product.id),
-                child: const Center(
-                  child: Icon(
-                    Icons.shopping_bag_outlined,
-                    color: Colors.white70,
-                    size: 80,
+            SizedBox(
+              height: 300,
+              width: double.infinity,
+              child: Image.network(
+                product.imageUrl,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, progress) {
+                  if (progress == null) return child;
+                  return Container(
+                    color: colorForProduct(product.id),
+                    child: const Center(child: CircularProgressIndicator()),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) => Container(
+                  color: colorForProduct(product.id),
+                  child: const Center(
+                    child: Icon(
+                      Icons.shopping_bag_outlined,
+                      color: Colors.white70,
+                      size: 80,
+                    ),
                   ),
                 ),
               ),
