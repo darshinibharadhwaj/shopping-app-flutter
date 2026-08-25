@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/product.dart';
@@ -24,7 +23,6 @@ Color colorForProduct(String id) {
 
 class ProductCard extends StatelessWidget {
   final Product product;
-
   const ProductCard({super.key, required this.product});
 
   @override
@@ -56,13 +54,24 @@ class ProductCard extends StatelessWidget {
           children: [
             AspectRatio(
               aspectRatio: 1,
-              child: Container(
-                color: colorForProduct(product.id),
-                child: const Center(
-                  child: Icon(
-                    Icons.shopping_bag_outlined,
-                    color: Colors.white70,
-                    size: 40,
+              child: Image.network(
+                product.imageUrl,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, progress) {
+                  if (progress == null) return child;
+                  return Container(
+                    color: colorForProduct(product.id),
+                    child: const Center(child: CircularProgressIndicator()),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) => Container(
+                  color: colorForProduct(product.id),
+                  child: const Center(
+                    child: Icon(
+                      Icons.shopping_bag_outlined,
+                      color: Colors.white70,
+                      size: 40,
+                    ),
                   ),
                 ),
               ),
